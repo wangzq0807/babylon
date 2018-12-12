@@ -5,3 +5,7 @@ set (PAXOS_SRCS
 add_executable (paxos
     ${PAXOS_SRCS}
 )
+
+add_executable (client
+    socket.cxx
+    client.cxx)

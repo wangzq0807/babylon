@@ -54,6 +54,7 @@ run_server (int port)
             {
                 int connfd = accept(listen_fd, (struct sockaddr *)&client_addr, &client_len);
                 conn_fds.push_back (connfd);
+                cout << "connected!" << endl;
             }
             else
             {
