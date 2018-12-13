@@ -5,44 +5,36 @@
 #include <string.h>
 #include <vector>
 #include <algorithm>
+#include "socket.h"
 
 using namespace std;
+using namespace phxpaxos;
 
-int listen_fd = -1;
 int epoll_fd = -1;
 vector<int> conn_fds;
 
-void
-set_nonblocking (int fd)
+void epoll_add(int epoll_fd, int fd)
 {
-    int flags = fcntl (fd, F_GETFL);
-    flags |= O_NONBLOCK;
-    fcntl (fd, F_SETFL, flags);
+    struct epoll_event ev;
+    ev.data.fd = fd;
+    ev.events = EPOLLIN | EPOLLET;
+    epoll_ctl (epoll_fd, EPOLL_CTL_ADD, fd, &ev);
 }
 
 int
 run_server (int port)
 {
-    listen_fd = socket (AF_INET, SOCK_STREAM, 0);
-    struct sockaddr_in server_addr;
-    bzero (&server_addr, sizeof(struct sockaddr_in));
-    server_addr.sin_family = AF_INET;
-    server_addr.sin_addr.s_addr = htonl (INADDR_ANY);
-    server_addr.sin_port = htons (port);
+    SocketAddress servAddr(port);
+    ServerSocket serv;
+    serv.setNonBlocking(true);
+    serv.listen(servAddr);
 
-    bind (listen_fd, (struct sockaddr *)&server_addr, sizeof(struct sockaddr_in));
-    set_nonblocking (listen_fd);
+    int listen_fd = serv.getSocketHandle();
 
-    epoll_fd = epoll_create (20);
-    struct epoll_event ev;
-    ev.data.fd = listen_fd;
-    ev.events = EPOLLIN | EPOLLET;
-    epoll_ctl (epoll_fd, EPOLL_CTL_ADD, listen_fd, &ev);
+    // epoll listen_fd
+    epoll_fd = epoll_create (1);
+    epoll_add(epoll_fd, listen_fd);
 
-    listen (listen_fd, 1024);
-
-    struct sockaddr_in client_addr;
-    socklen_t client_len = sizeof(struct sockaddr_in);
     char buffer[1024 + 1];
     struct epoll_event evs[20];
     while (true)
@@ -52,9 +44,9 @@ run_server (int port)
         {
             if (evs[i].data.fd == listen_fd)
             {
-                int connfd = accept(listen_fd, (struct sockaddr *)&client_addr, &client_len);
-                conn_fds.push_back (connfd);
-                cout << "connected!" << endl;
+                Socket* conn =  serv.accept();
+                int conn_fd = conn->getSocketHandle();
+                epoll_add(epoll_fd, conn_fd);
             }
             else
             {
@@ -62,7 +54,8 @@ run_server (int port)
                 size_t read_num = recv(connfd, buffer, 1024, 0);
                 if (read_num)
                 {
-                    auto itr = find(conn_fds.begin(), conn_fds.end(), connfd);
+                    cout << buffer << endl;
+                    //auto itr = find(conn_fds.begin(), conn_fds.end(), connfd);
                 }
                 else
                 {
