@@ -8,7 +8,6 @@
 #include "socket.h"
 
 using namespace std;
-using namespace phxpaxos;
 
 int epoll_fd = -1;
 vector<int> conn_fds;

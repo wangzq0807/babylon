@@ -27,8 +27,6 @@ See the AUTHORS file for names of contributors.
 #include <sys/socket.h>
 #include <netinet/tcp.h>
 
-namespace phxpaxos {
-
 using std::min;
 
 ///////////////////////////////////////////////////////////SocketAddress
@@ -363,7 +361,7 @@ SocketAddress Socket::getRemoteAddress(int fd) {
     SocketAddress::Addr addr;
     socklen_t len = sizeof(addr);
 
-    phxpaxos::SocketAddress remoteAddr;
+    SocketAddress remoteAddr;
     if (::getpeername(fd, &addr.addr, &len) == 0) {
         remoteAddr.setAddress(addr);
     }
@@ -379,7 +377,7 @@ SocketAddress Socket::getLocalAddress(int fd) {
     SocketAddress::Addr addr;
     socklen_t len = sizeof(addr);
 
-    phxpaxos::SocketAddress localAddr;
+    SocketAddress localAddr;
     if (::getsockname(fd, &addr.addr, &len) == 0) {
         localAddr.setAddress(addr);
     }
@@ -576,6 +574,5 @@ int ServerSocket::acceptfd(SocketAddress* addr) {
     return fd;
 }
 
-}
 
 

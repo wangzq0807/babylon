@@ -3,7 +3,7 @@ include(precheck.cmake)
 
 option (WITH_THREADS "Enable multithreading support" ON)
 
-add_definitions(-std=c++11)
+add_compile_options(-std=c++11)
 
 add_subdirectory(paxos)
 

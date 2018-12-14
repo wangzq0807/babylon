@@ -2,8 +2,8 @@
 #include <iostream>
 #include <unistd.h>
 #include "socket.h"
+
 using namespace std;
-using namespace phxpaxos;
 
 #define SERV_PORT 5566
 #define BUF_SIZE 1024

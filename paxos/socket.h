@@ -29,8 +29,7 @@ See the AUTHORS file for names of contributors.
 #include <string>
 #include <exception>
 #include <sstream>
-
-namespace phxpaxos {
+#include <boost/noncopyable.hpp>
 
 using std::string;
 using std::exception;
@@ -116,7 +115,7 @@ private:
 
 ///////////////////////////////////////////////////////////////////////Socket
 
-class SocketBase {
+class SocketBase : public boost::noncopyable {
 public:
     SocketBase();
 
@@ -258,5 +257,4 @@ public:
     virtual ~SocketException() throw () {}
 };
 
-} 
 
