@@ -1,6 +1,7 @@
 set (PAXOS_SRCS
     paxos.cxx
     socket.cxx
+    epoller.cxx
     )
 
 add_executable (paxos
