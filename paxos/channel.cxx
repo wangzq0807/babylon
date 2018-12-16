@@ -1,4 +1,5 @@
 #include "channel.h"
+#include "eventloop.h"
 #include <sys/epoll.h>
 
 Channel::Channel(int fd)
@@ -8,7 +9,8 @@ Channel::Channel(int fd)
 {}
 
 Channel::~Channel()
-{}
+{
+}
 
 void Channel::processEvent()
 {
@@ -17,22 +19,28 @@ void Channel::processEvent()
         onRead();
     }
 }
+
 void Channel::add(EventLoop* loop)
 {
-
+    loop->addChannel(ChannelPtr(this));
+    m_loop = loop;
 }
 
 void Channel::remove()
 {
-
+    m_loop->removeChannel(ChannelPtr(this));
+    m_loop = nullptr;
 }
 
 void Channel::onRead()
 {}
+
 void Channel::onWrite()
 {}
+
 void Channel::onClose()
 {}
+
 void Channel::onError()
 {}
 

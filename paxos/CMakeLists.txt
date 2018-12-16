@@ -4,6 +4,7 @@ set (PAXOS_SRCS
     epoller.cxx
     channel.cxx
     tcpconnection.cxx
+    eventloop.cxx
     )
 
 add_executable (paxos

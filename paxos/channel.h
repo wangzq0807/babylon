@@ -14,6 +14,10 @@ public:
     void add(EventLoop* loop);
     void remove();
 
+    int getFd() {
+        return m_fd;
+    }
+
     void setEvent(int event);
     virtual void processEvent();
 
@@ -28,4 +32,6 @@ private:
     int         m_fd;
     EventLoop*  m_loop;
 };
+
+typedef std::shared_ptr<Channel> ChannelPtr;
 

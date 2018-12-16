@@ -1,22 +1,26 @@
 #pragma once
 #include <vector>
+#include <memory>
 #include "socket.h"
+
+class Channel;
 
 class EPoller
 {
+    typedef std::shared_ptr<Channel> ChannelPtr;
 public:
-    explicit EPoller(const SocketAddress& addr);
+    explicit EPoller();
     ~EPoller();
     
-    void addPoll(const SocketAddress& addr);
-
     int run(int interval);
 
+    void addChannel(const ChannelPtr& channel);
+    void removeChannel(const ChannelPtr& channel);
+
 protected:
-    void updateEpollCtl(int nflags, SocketBase* socket);
+    void updateEpollCtl(int nflags, const ChannelPtr& channel);
 
 private:
     int             m_epollfd;
-    ServerSocket    m_serv;
-    std::vector<Socket *>   m_clients;
+    std::vector<ChannelPtr>   m_channels;
 };

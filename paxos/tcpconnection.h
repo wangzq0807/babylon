@@ -5,10 +5,10 @@ class Socket;
 
 class TcpConnection;
 typedef std::shared_ptr<TcpConnection> TcpConnectionPtr;
-typedef std::function<void(TcpConnectionPtr)> MessageCallback;
 
 class TcpConnection : public Channel
 {
+    typedef std::function<void(TcpConnectionPtr)> MessageCallback;
 public:
     explicit TcpConnection(Socket* conn);
     virtual ~TcpConnection();
