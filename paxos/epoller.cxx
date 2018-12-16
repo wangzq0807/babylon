@@ -1,12 +1,12 @@
 #include "epoller.h"
 #include <sys/epoll.h>
 #include <iostream>
+#include "channel.h"
 
-#define EV_NUM 20
+#define EV_NUM 1024
 
-EPoller::EPoller(unsigned short port)
+EPoller::EPoller(const SocketAddress& addr)
 {
-    SocketAddress addr(port);
     m_serv.setNonBlocking(true);
     m_serv.listen(addr);
     
@@ -17,41 +17,41 @@ EPoller::EPoller(unsigned short port)
 
 EPoller::~EPoller()
 {
-    for (auto conn : m_conns)
+    for (auto client : m_clients)
     {
-        delete conn;
+        delete client;
     }
-    m_conns.clear();
+    m_clients.clear();
     ::close(m_epollfd);
 }
 
-int EPoller::run(int timeout)
+void EPoller::addPoll(const SocketAddress& addr)
+{
+    m_serv.setNonBlocking(true);
+    m_serv.listen(addr);
+    
+    int listen_fd = m_serv.getSocketHandle();
+    m_epollfd = ::epoll_create1 (EPOLL_CLOEXEC);
+    updateEpollCtl(EPOLL_CTL_ADD, &m_serv);
+
+}
+
+int EPoller::run(int interval)
 {
     char buffer[1024];
     struct epoll_event evs[EV_NUM];
-    int evnum = ::epoll_wait (m_epollfd, evs, EV_NUM, timeout);
+    int evnum = ::epoll_wait (m_epollfd, evs, EV_NUM, interval);
     int listen_fd = m_serv.getSocketHandle();
     for (int i = 0; i < evnum; ++i)
     {
         if (evs[i].data.ptr == &m_serv)
         {
-            Socket* conn = m_serv.accept();
-            m_conns.push_back(conn);
-            updateEpollCtl(EPOLL_CTL_ADD, conn);
+            Socket* client = m_serv.accept();
+            m_clients.push_back(client);
+            updateEpollCtl(EPOLL_CTL_ADD, client);
         }
         else
         {
-            Socket* conn = static_cast<Socket *>(evs[i].data.ptr);
-            int read_num = conn->receive(buffer, 1024, 0);
-            if (read_num)
-            {
-                std::cout << buffer << std::endl;
-                //auto itr = find(conn_fds.begin(), conn_fds.end(), connfd);
-            }
-            else
-            {
-                //cout << buffer << endl;
-            }
         }
     }
     return 0;

@@ -29,7 +29,7 @@ See the AUTHORS file for names of contributors.
 #include <string>
 #include <exception>
 #include <sstream>
-#include <boost/noncopyable.hpp>
+#include <boost/utility.hpp>
 
 using std::string;
 using std::exception;

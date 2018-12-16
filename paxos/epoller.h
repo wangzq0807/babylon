@@ -5,9 +5,11 @@
 class EPoller
 {
 public:
-    explicit EPoller(unsigned short port);
+    explicit EPoller(const SocketAddress& addr);
     ~EPoller();
     
+    void addPoll(const SocketAddress& addr);
+
     int run(int interval);
 
 protected:
@@ -16,5 +18,5 @@ protected:
 private:
     int             m_epollfd;
     ServerSocket    m_serv;
-    std::vector<Socket *>   m_conns;
+    std::vector<Socket *>   m_clients;
 };
