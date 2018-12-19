@@ -1,7 +1,11 @@
 #pragma once
 #include <boost/noncopyable.hpp>
 #include <algorithm>
+#include <memory>
+#include <functional>
+#include <vector>
 #include "socket.h"
+#include "tcpacceptor.h"
 
 class EventLoop;
 class TcpConnection;
@@ -11,23 +15,27 @@ typedef std::function<void(TcpConnectionPtr)> MessageCallback;
 class TcpServer : public boost::noncopyable
 {
 public:
-    TcpServer(const EventLoop* loop,
+    TcpServer(EventLoop* loop,
               unsigned short port);
-    TcpServer(const EventLoop* loop,
+    TcpServer(EventLoop* loop,
               const SocketAddress& addr);
+    virtual ~TcpServer();
 
     void setConnectCallback() {
 
     }
 
     void setMessageCallback(const MessageCallback& func) {
-        m_messageCallback = func;
+        m_messageFunc = func;
     }
 protected:
     void onNewConnection(Socket *sock);
-private
+
+private:
     EventLoop*                      m_loop;
-    std::vector<TcpConnectionPtr>   m_Connections;
+    TcpAcceptor                     m_acceptor;
+    MessageCallback                 m_messageFunc;
+    std::vector<TcpConnectionPtr>   m_connections;
 };
 
 

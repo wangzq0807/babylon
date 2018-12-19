@@ -4,6 +4,8 @@ set (PAXOS_SRCS
     epoller.cxx
     channel.cxx
     tcpconnection.cxx
+    tcpacceptor.cxx
+    tcpserver.cxx
     eventloop.cxx
     )
 

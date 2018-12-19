@@ -18,10 +18,12 @@ EPoller::~EPoller()
 
 void EPoller::addChannel(const ChannelPtr& channel)
 {
+    updateEpollCtl(EPOLL_CTL_ADD, channel);
 }
 
 void EPoller::removeChannel(const ChannelPtr& channel)
 {
+    updateEpollCtl(EPOLL_CTL_DEL, channel);
 }
 
 int EPoller::run(int interval)

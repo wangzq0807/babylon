@@ -20,13 +20,13 @@ void Channel::processEvent()
     }
 }
 
-void Channel::add(EventLoop* loop)
+void Channel::addToLoop(EventLoop* loop)
 {
     loop->addChannel(ChannelPtr(this));
     m_loop = loop;
 }
 
-void Channel::remove()
+void Channel::removeFromLoop()
 {
     m_loop->removeChannel(ChannelPtr(this));
     m_loop = nullptr;

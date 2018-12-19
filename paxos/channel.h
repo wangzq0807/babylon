@@ -11,8 +11,8 @@ public:
     Channel(int fd);
     virtual ~Channel();
 
-    void add(EventLoop* loop);
-    void remove();
+    void addToLoop(EventLoop* loop);
+    void removeFromLoop();
 
     int getFd() {
         return m_fd;

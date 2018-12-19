@@ -13,6 +13,12 @@ TcpConnection::~TcpConnection()
 
 void TcpConnection::onRead()
 {
-    m_messageCallback(TcpConnectionPtr(this));
+    m_messageFunc(TcpConnectionPtr(this));
+}
+
+void TcpConnection::disconnect()
+{
+    removeFromLoop();
+    m_conn->close();
 }
 

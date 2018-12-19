@@ -15,6 +15,7 @@ public:
 
     void setMessageCallback(const MessageCallback& callback);
 
+    void disconnect();
 protected:
     virtual void onRead();
     //virtual void onWrite();
@@ -23,6 +24,6 @@ protected:
 
 private:
     Socket*             m_conn;
-    MessageCallback     m_messageCallback;
+    MessageCallback     m_messageFunc;
 };
 
