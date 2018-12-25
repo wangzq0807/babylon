@@ -28,6 +28,7 @@ TcpServer::~TcpServer()
 void TcpServer::onNewConnection(Socket *sock)
 {
     TcpConnectionPtr conn = TcpConnectionPtr(new TcpConnection(sock));
+    conn->setMessageCallback(m_messageFunc);
     m_loop->addChannel(conn);
     m_connections.push_back(conn); 
 }

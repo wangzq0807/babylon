@@ -10,6 +10,10 @@ TcpConnection::~TcpConnection()
 {
     delete m_conn;
 }
+void TcpConnection::setMessageCallback(const MessageCallback& callback)
+{
+    m_messageFunc = callback;
+}
 
 void TcpConnection::onRead()
 {

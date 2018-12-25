@@ -32,6 +32,8 @@ int EPoller::run(int interval)
     int evnum = ::epoll_wait (m_epollfd, evs, EV_NUM, interval);
     for (int i = 0; i < evnum; ++i)
     {
+        Channel* ptr = (Channel*)(evs[i].data.ptr);
+        ptr->processEvent();
     }
     return 0;
 }
