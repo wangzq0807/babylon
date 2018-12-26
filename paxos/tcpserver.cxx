@@ -4,7 +4,7 @@
 
 TcpServer::TcpServer(EventLoop* loop,
                     unsigned short port)
-    : m_acceptor(port)
+    :m_loop(loop), m_acceptor(port)
 {
     m_acceptor.addToLoop(loop);
     m_acceptor.setAcceptCallback(
@@ -13,7 +13,7 @@ TcpServer::TcpServer(EventLoop* loop,
 
 TcpServer::TcpServer(EventLoop* loop,
                     const SocketAddress& addr)
-    : m_acceptor(addr)
+    :m_loop(loop), m_acceptor(addr)
 {
     m_acceptor.addToLoop(loop);
     m_acceptor.setAcceptCallback(

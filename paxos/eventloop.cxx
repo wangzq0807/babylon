@@ -19,6 +19,7 @@ void EventLoop::run()
 {
     while(true)
     {
+        m_poll.run(500);
     }
 }
 
