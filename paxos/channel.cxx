@@ -3,9 +3,9 @@
 #include <sys/epoll.h>
 #include <assert.h>
 
-Channel::Channel(int fd)
-    :m_event(0),
-    m_fd(fd),
+Channel::Channel()
+    :m_events(0),
+    m_fd(-1),
     m_loop(nullptr)
 {}
 
@@ -13,9 +13,10 @@ Channel::~Channel()
 {
 }
 
-void Channel::processEvent()
+void Channel::processEvent(unsigned int events)
 {
-    if (m_event & (EPOLLIN | EPOLLRDHUP | EPOLLPRI))
+    m_events = events;
+    if (m_events & (EPOLLIN | EPOLLRDHUP | EPOLLPRI))
     {
         onRead();
     }
@@ -25,14 +26,14 @@ void Channel::addToLoop(EventLoop* loop)
 {
     assert(m_loop == nullptr);
     assert(loop != nullptr);
-    loop->addChannel(ChannelPtr(this));
+    loop->addChannel(shared_from_this());
     m_loop = loop;
 }
 
 void Channel::removeFromLoop()
 {
     assert(m_loop != nullptr);
-    m_loop->removeChannel(ChannelPtr(this));
+    m_loop->removeChannel(shared_from_this());
     m_loop = nullptr;
 }
 

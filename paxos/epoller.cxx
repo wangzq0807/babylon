@@ -33,7 +33,7 @@ int EPoller::run(int interval)
     for (int i = 0; i < evnum; ++i)
     {
         Channel* ptr = (Channel*)(evs[i].data.ptr);
-        ptr->processEvent();
+        ptr->processEvent(evs[i].events);
     }
     return 0;
 }

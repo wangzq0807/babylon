@@ -4,19 +4,21 @@
 
 TcpServer::TcpServer(EventLoop* loop,
                     unsigned short port)
-    :m_loop(loop), m_acceptor(port)
+    :m_loop(loop)
 {
-    m_acceptor.addToLoop(loop);
-    m_acceptor.setAcceptCallback(
+    m_acceptor = TcpAcceptorPtr(new TcpAcceptor(port));
+    m_acceptor->addToLoop(loop);
+    m_acceptor->setAcceptCallback(
         std::bind(&TcpServer::onNewConnection, this, std::placeholders::_1));
 }
 
 TcpServer::TcpServer(EventLoop* loop,
                     const SocketAddress& addr)
-    :m_loop(loop), m_acceptor(addr)
+    :m_loop(loop)
 {
-    m_acceptor.addToLoop(loop);
-    m_acceptor.setAcceptCallback(
+    m_acceptor = TcpAcceptorPtr(new TcpAcceptor(addr));
+    m_acceptor->addToLoop(loop);
+    m_acceptor->setAcceptCallback(
         std::bind(&TcpServer::onNewConnection, this, std::placeholders::_1));
 }
 

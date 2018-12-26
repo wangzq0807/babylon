@@ -32,8 +32,8 @@ protected:
     void onNewConnection(Socket *sock);
 
 private:
-    EventLoop*                      m_loop;
-    TcpAcceptor                     m_acceptor;
+    EventLoop                       *m_loop;
+    TcpAcceptorPtr                  m_acceptor;
     MessageCallback                 m_messageFunc;
     std::vector<TcpConnectionPtr>   m_connections;
 };

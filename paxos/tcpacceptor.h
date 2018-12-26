@@ -21,3 +21,5 @@ private:
     AcceptCallback  m_acceptFunc;
 };
 
+typedef std::shared_ptr<TcpAcceptor>    TcpAcceptorPtr;
+

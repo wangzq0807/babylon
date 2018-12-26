@@ -8,18 +8,20 @@ class Channel : public boost::noncopyable,
                 public std::enable_shared_from_this<Channel>
 {
 public:
-    Channel(int fd);
+    Channel();
     virtual ~Channel();
 
     void addToLoop(EventLoop* loop);
     void removeFromLoop();
 
+    void setFd(int fd) {
+        m_fd = fd;
+    }
     int getFd() {
         return m_fd;
     }
 
-    void setEvent(int event);
-    virtual void processEvent();
+    virtual void processEvent(unsigned int events);
 
 protected:
     virtual void onRead();
@@ -28,9 +30,9 @@ protected:
     virtual void onError();
 
 private:
-    int         m_event;
-    int         m_fd;
-    EventLoop*  m_loop;
+    unsigned int    m_events;
+    int             m_fd;
+    EventLoop*      m_loop;
 };
 
 typedef std::shared_ptr<Channel> ChannelPtr;

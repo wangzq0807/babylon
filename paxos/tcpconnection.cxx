@@ -3,8 +3,10 @@
 
 TcpConnection::TcpConnection(Socket *conn)
     :m_conn(conn),
-    Channel(conn->getSocketHandle())
-{}
+    Channel()
+{
+    setFd(conn->getSocketHandle());
+}
 
 TcpConnection::~TcpConnection()
 {
@@ -17,6 +19,8 @@ void TcpConnection::setMessageCallback(const MessageCallback& callback)
 
 void TcpConnection::onRead()
 {
+    char buf[1024];
+    m_conn->receive(buf, 1024);
     m_messageFunc(TcpConnectionPtr(this));
 }
 
