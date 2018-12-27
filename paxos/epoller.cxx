@@ -12,7 +12,6 @@ EPoller::EPoller()
 
 EPoller::~EPoller()
 {
-    m_channels.clear();
     ::close(m_epollfd);
 }
 

@@ -22,5 +22,4 @@ protected:
 
 private:
     int             m_epollfd;
-    std::vector<ChannelPtr>   m_channels;
 };

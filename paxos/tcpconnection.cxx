@@ -12,6 +12,7 @@ TcpConnection::~TcpConnection()
 {
     delete m_conn;
 }
+
 void TcpConnection::setMessageCallback(const MessageCallback& callback)
 {
     m_messageFunc = callback;
@@ -21,7 +22,8 @@ void TcpConnection::onRead()
 {
     char buf[1024];
     m_conn->receive(buf, 1024);
-    m_messageFunc(TcpConnectionPtr(this));
+    TcpConnectionPtr conn = std::dynamic_pointer_cast<TcpConnection>(shared_from_this());
+    m_messageFunc(conn);
 }
 
 void TcpConnection::disconnect()
