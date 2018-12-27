@@ -24,6 +24,10 @@ TcpServer::TcpServer(EventLoop* loop,
 
 TcpServer::~TcpServer()
 {
+    for (auto itr : m_connections)
+    {
+        itr->removeFromLoop();
+    }
     m_connections.clear();
 }
 
@@ -31,7 +35,9 @@ void TcpServer::onNewConnection(Socket *sock)
 {
     TcpConnectionPtr conn = TcpConnectionPtr(new TcpConnection(sock));
     conn->setMessageCallback(m_messageFunc);
-    m_loop->addChannel(conn);
+    conn->addToLoop(m_loop);
     m_connections.push_back(conn); 
+    if (m_connectFunc != nullptr)
+        m_connectFunc(conn);
 }
 

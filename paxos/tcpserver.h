@@ -21,8 +21,8 @@ public:
               const SocketAddress& addr);
     virtual ~TcpServer();
 
-    void setConnectCallback() {
-
+    void setConnectCallback(const MessageCallback& func) {
+        m_connectFunc = func;
     }
 
     void setMessageCallback(const MessageCallback& func) {
@@ -34,6 +34,7 @@ protected:
 private:
     EventLoop                       *m_loop;
     TcpAcceptorPtr                  m_acceptor;
+    MessageCallback                 m_connectFunc;
     MessageCallback                 m_messageFunc;
     std::vector<TcpConnectionPtr>   m_connections;
 };

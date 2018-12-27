@@ -2,6 +2,7 @@
 #include "eventloop.h"
 #include <sys/epoll.h>
 #include <assert.h>
+#include <iostream>
 
 Channel::Channel()
     :m_events(0),
